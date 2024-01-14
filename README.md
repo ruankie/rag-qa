@@ -8,7 +8,7 @@
 A containerised QA framework to ask questions to your documents.
 
 ## Demo
-<img src="./assets/demo.gif" alt="demo" width="500">
+![demo](./assets/demo.gif)
 
 
 ## Usage
