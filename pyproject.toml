@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "py-poetry-template"
+name = "rag-qa"
 version = "0.1.0"
-description = "Minimal template for quickly setting up new python projects with Poetry for virtual environment and dependency management."
+description = "A containerised QA framework to ask questions to your documents."
 authors = ["Ruan Pretorius"]
 license = "MIT"
 readme = "README.md"
@@ -11,8 +11,8 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.11"
-jupyterlab = "^3.6.3"
 python-dotenv = "^1.0.0"
+jupyterlab = "^4.0.10"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"
