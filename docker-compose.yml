@@ -7,8 +7,11 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/:/app
+      - ./src/:/app/src
     networks:
       - my-ragnet
+    env_file:
+      - .env
 
   frontend:
     build: ./frontend
