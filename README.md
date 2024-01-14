@@ -7,6 +7,10 @@
 
 A containerised QA framework to ask questions to your documents.
 
+## Demo
+<img src="./assets/demo.gif" alt="demo" width="500">
+
+
 ## Usage
 > Make sure you enter your OpenAI API key in a `.env` file as shown in `.env.example`
 
