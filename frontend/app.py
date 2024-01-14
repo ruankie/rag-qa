@@ -2,31 +2,29 @@ import streamlit as st
 import requests
 from requests.exceptions import HTTPError
 
-st.title("RAG App")
+st.title("Web Page QA")
 
-# Display "Hello, world!" on the app
-st.write("Test App!")
+# Create a sidebar for the web page URL input
+st.sidebar.header("Enter a web page URL")
+url = st.sidebar.text_input(label="URL", value="https://lilianweng.github.io/posts/2023-06-23-agent/")
 
-# Create a button with the label "Test backend"
-button = st.button("Test backend")
+# Create a chat interface
+message = st.chat_message("assistant")
+message.write("Ask a question to your page.")
 
-# If the button is clicked, send a GET request to localhost:80/ and display the response
-if button:
-    try:
-        response = requests.get("http://backend:8000/s")
-        response = response.text
-    except HTTPError as err:
-        response = f"Not working! (Code {err.response.status_code})"
-    st.write(response)
+prompt = st.chat_input("Ask something")
+if prompt:
+    message = st.chat_message("user")
+    message.write(prompt)
 
+    message = st.chat_message("assistant")
+    message.write("Thinking...")
+    
+    payload = {
+        "question": prompt,
+        "url": url 
+    }
+    # message.write(payload)
+    response = requests.post("http://backend:8000/ask", json=payload)
+    message.write(response.text)
 
-# st.write("Upload a PDF document and ask a question about it. The app will use a large language model to generate an answer based on the document.")
-
-# pdf = st.file_uploader("Choose a PDF file", type="pdf")
-# question = st.text_input("Enter your question")
-
-# if st.button("Get answer"):
-#     # TODO: implement the logic to send the PDF and the question to the backend API and display the answer
-#     # Hint: use requests.post to make a POST request to the API endpoint
-#     answer = "This is a dummy answer"
-#     st.write(answer)
