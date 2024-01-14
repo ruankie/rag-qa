@@ -1,22 +1,22 @@
-from fastapi import FastAPI, File, Form
-# from langchain import LangChain
+from fastapi import FastAPI
+from pydantic import BaseModel
+from src.utils import url_qa
 
 app = FastAPI()
-# lc = LangChain()
 
+class Question(BaseModel):
+    question: str
+    url: str
+    
 
 @app.get("/")
 def root():
     return {"Status": "Server running."}
 
-@app.get("/test")
-def root():
-    return {"Status": "Server running."}
-
-
-# @app.post("/answer")
-# def answer(pdf: bytes = File(...), question: str = Form(...)):
-#     # TODO: implement the logic to answer the question based on the PDF document
-#     # Hint: use lc.rag to perform the retrieval-augmented generation
-#     answer = "This is a dummy answer"
-#     return {"answer": answer}
+@app.post("/ask")
+def ask_question(question:Question):
+    ans = url_qa(
+        url=question.url,
+        question=question.question
+    )
+    return ans
