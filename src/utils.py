@@ -1,15 +1,25 @@
 import bs4
-from langchain import hub
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.vectorstores import Chroma
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_core.prompts import PromptTemplate
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
+template = """Use the following pieces of context to answer the question at the end.
+If you don't know the answer, just say that you don't know, don't try to make up an answer.
+Be helpful in your answer and be sure to reference the following context when possible.
 
-prompt = hub.pull("rlm/rag-prompt")
-llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+{context}
+
+Question: {question}
+
+Answer:"""
+prompt = PromptTemplate.from_template(template)
+
+llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0)
 
 def _load_documents(url:str):
     loader = WebBaseLoader(
@@ -29,8 +39,9 @@ def _split_documents(docs):
     return splits
 
 def _get_embedding_retriever(splits):
-    vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
-    retriever = vectorstore.as_retriever()
+    embedding_function = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    vectorstore = Chroma.from_documents(documents=splits, embedding=embedding_function)
+    retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 5})
     return retriever
 
 def _format_docs(docs):
