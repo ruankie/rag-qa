@@ -23,6 +23,7 @@ chromadb = "^0.4.22"
 bs4 = "^0.0.1"
 langchainhub = "^0.1.14"
 langchain-openai = "^0.0.2.post1"
+sentence-transformers = "^2.2.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"
