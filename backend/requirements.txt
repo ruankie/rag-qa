@@ -3,6 +3,6 @@ uvicorn==0.25.0
 langchain==0.1.0
 langchain-community==0.0.12
 chromadb==0.4.22
-bs4==0.0.1
 sentence-transformers==2.2.2
 langchain-google-genai==0.0.6
+pypdf==3.17.4
