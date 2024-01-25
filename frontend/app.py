@@ -35,4 +35,4 @@ if prompt and uploaded_file is not None:
 
     # Send request and display answer to user
     response = requests.post("http://backend:8000/ask", json=json_payload, timeout=120)
-    message.write(response.text)
+    message.write(response.json())
