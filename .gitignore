@@ -164,3 +164,4 @@ cython_debug/
 
 # Sample data
 data/
+**.pdf
