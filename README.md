@@ -36,3 +36,4 @@ A free containerised QA framework to ask questions to your documents.
 3. [Install Python 3](https://www.python.org/downloads/) on your machine
 4. Create a virtual environment for your project using the command `poetry install`. This will install all the basic dependencies specified in your `pyproject.toml` file.
 5. Set up your API keys in a file called `.env` (see `.env.example` for an example)
+6. When you run your backend and frontend containers locally, use `docker compose up --build` to ensure the latest changes are reflected in the containers.
