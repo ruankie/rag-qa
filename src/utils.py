@@ -77,7 +77,7 @@ def _load_and_split_doc(pdf_path: str) -> List[Document]:
     loader = PyPDFLoader(pdf_path)
     splits = loader.load_and_split(
         text_splitter=RecursiveCharacterTextSplitter(
-            chunk_size=1000, chunk_overlap=200, add_start_index=True
+            chunk_size=500, chunk_overlap=50, add_start_index=True
         )
     )
     return splits
