@@ -25,6 +25,8 @@ langchainhub = "^0.1.14"
 langchain-openai = "^0.0.2.post1"
 sentence-transformers = "^2.2.2"
 langchain-google-genai = "^0.0.6"
+pypdf = "^3.17.4"
+python-multipart = "^0.0.6"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"
