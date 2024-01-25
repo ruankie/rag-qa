@@ -3,6 +3,7 @@ Utility functions used in the RAG app.
 """
 
 import base64
+import logging
 from typing import List
 
 from langchain_core.documents import Document
@@ -17,6 +18,10 @@ from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_google_genai import ChatGoogleGenerativeAI
+
+# Set up logger
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
 
 TEMPLATE = """Use the following pieces of context to answer the question at the end.
 If you don't know the answer, just say that you don't know, don't try to make up an answer.
@@ -44,6 +49,7 @@ def _save_doc_locally(pdf_string: str, path: str = "./document.pdf") -> str:
     Returns:
         str: Local path where pdf document was saved to.
     """
+    logger.info("Saving pdf document locally")
     # Decode the base64 string to bytes
     decoded_bytes = base64.b64decode(pdf_string)
     if decoded_bytes[0:4] != b"%PDF":
@@ -67,6 +73,7 @@ def _load_and_split_doc(pdf_path: str) -> List[Document]:
     Returns:
         List[Document]: Document chunks (splits).
     """
+    logger.info("Splitting pdf document into chunks")
     loader = PyPDFLoader(pdf_path)
     splits = loader.load_and_split(
         text_splitter=RecursiveCharacterTextSplitter(
@@ -87,6 +94,7 @@ def _get_embedding_retriever(splits: List[Document]) -> VectorStoreRetriever:
     Returns:
         VectorStoreRetriever: Vector store retriever.
     """
+    logger.info("Embedding document chunks")
     embedding_function = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     vectorstore = Chroma.from_documents(documents=splits, embedding=embedding_function)
     retriever = vectorstore.as_retriever(
@@ -118,6 +126,7 @@ def _get_chain(
     Returns:
         Runnable: A Runnable object that represents the RAG chain.
     """
+    logger.info("Getting RAG chain")
     rag_chain = (
         {"context": retriever | _format_docs, "question": RunnablePassthrough()}
         | prompt
@@ -138,9 +147,14 @@ def get_answer(pdf_string: str, question: str) -> str:
     Returns:
         str: The answer to the given question.
     """
+    logger.info("Initiating RAG QA cycle")
     pdf_path = _save_doc_locally(pdf_string, path="./document.pdf")
     splits = _load_and_split_doc(pdf_path)
     retriever = _get_embedding_retriever(splits)
     rag_chain = _get_chain(retriever, prompt, llm)
+
+    logger.info("Invoking RAG chain")
     response = rag_chain.invoke(question)
+
+    logger.info("Replying with chain response")
     return response
